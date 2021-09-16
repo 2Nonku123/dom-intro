@@ -4,7 +4,7 @@
   "description": "A brief introduction to the browser Document Object Model (DOM)",
   "main": "greet.js",
   "dependencies": {
-    "chalk": "^4.1.2"
+    "test": "^test"
   },
   "devDependencies": {
     "mocha": "^9.1.1"
