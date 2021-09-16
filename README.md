@@ -9,3 +9,4 @@ A brief introduction to the browser Document Object Model (DOM)
 * Set/get a value inside of and div or other elements
 * Add/remove classes from an element
 * Listen for events on HTML elements
+[![Build Status](https://app.travis-ci.com/2Nonku123/dom-intro.svg?branch=main)](https://app.travis-ci.com/2Nonku123/dom-intro)
