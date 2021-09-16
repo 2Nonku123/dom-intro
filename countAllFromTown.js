@@ -10,7 +10,7 @@ module.exports = function countAllFromTown(regNum,town){
       if(newList.includes(town)== true){
       counter++;
         
-     } 
+      }
   }
     console.log(newList);
   return counter;
