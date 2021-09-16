@@ -1,22 +1,123 @@
-// get a reference to the sms or call radio buttons
+module.exports = function SettingsBill() {
 
-// get refences to all the settings fields
+    let smsCost;
+    let callCost;
+    let warningLevel;
+    let criticalLevel; 
 
-//get a reference to the add button
+    let actionList = [];
 
-//get a reference to the 'Update settings' button
+    function setSettings (settings) {
+        smsCost = Number(settings.smsCost);
+        callCost = Number(settings.callCost);
+        warningLevel = settings.warningLevel;
+        criticalLevel = settings.criticalLevel;
+    }
 
-// create a variables that will keep track of all the settings
+    function getSettings
+    () {
+        return {
+            smsCost,
+            callCost,
+            warningLevel,
+            criticalLevel
+        }
+    }
 
-// create a variables that will keep track of all three totals.
+    function recordAction(action) {
 
-//add an event listener for when the 'Update settings' button is pressed
+        let cost = 0;
+        if (action === 'sms'){
+            cost = smsCost;
+        }
+        else if (action === 'call'){
+            cost = callCost;
+        }
 
-//add an event listener for when the add button is pressed
+        actionList.push({
+            type: action,
+            cost,
+            timestamp: new Date()
+        });
+    }
 
-//in the event listener get the value from the billItemTypeRadio radio buttons
-// * add the appropriate value to the call / sms total
-// * add the appropriate value to the overall total
-// * add nothing for invalid values that is not 'call' or 'sms'.
-// * display the latest total on the screen.
-// * check the value thresholds and display the total value in the right color.
+    function actions(){
+        return actionList;
+    }
+
+    function actionsFor(type){
+        const filteredActions = [];
+
+        // loop through all the entries in the action list 
+        for (let index = 0; index < actionList.length; index++) {
+            const action = actionList[index];
+            // check this is the type we are doing the total for 
+            if (action.type === type) {
+                // add the action to the list
+                filteredActions.push(action);
+            }
+        }
+
+        return filteredActions;
+
+        // return actionList.filter((action) => action.type === type);
+    }
+
+    function getTotal(type) {
+        let total = 0;
+        // loop through all the entries in the action list 
+        for (let index = 0; index < actionList.length; index++) {
+            const action = actionList[index];
+            // check this is the type we are doing the total for 
+            if (action.type === type) {
+                // if it is add the total to the list
+                total += action.cost;
+            }
+        }
+        return total;
+
+        // the short way using reduce and arrow functions
+
+        // return actionList.reduce((total, action) => { 
+        //     let val = action.type === type ? action.cost : 0;
+        //     return total + val;
+        // }, 0);
+    }
+
+    function grandTotal() {
+        return getTotal('sms') + getTotal('call');
+    }
+
+    function totals() {
+        let smsTotal = getTotal('sms')
+        let callTotal = getTotal('call')
+        return {
+            smsTotal,
+            callTotal,
+            grandTotal : grandTotal()
+        }
+    }
+
+    function hasReachedWarningLevel(){
+        const total = grandTotal();
+        const reachedWarningLevel = total >= warningLevel 
+            && total < criticalLevel;
+
+        return reachedWarningLevel;
+    }
+
+    function hasReachedCriticalLevel(){
+        const total = grandTotal();
+        return total >= criticalLevel;
+    }
+
+    return {
+        setSettings,
+        getSettings,
+        recordAction,
+        actions,
+        actionsFor,
+        totals,
+        hasReachedWarningLevel,
+        hasReachedCriticalLevel
+    }
